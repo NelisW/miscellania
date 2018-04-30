@@ -32,7 +32,7 @@ with open('aud.txt','w') as fout:
             line = line.replace('<',' ')
             line = line.replace('|','I')
             line = line.replace('"',' ')
-            line = line.replace(':',' ')
+            line = line.replace(':','')
             line = line.replace('/',' ')
             line = line.replace('.',' ')
             line = line.replace('?',' ')
