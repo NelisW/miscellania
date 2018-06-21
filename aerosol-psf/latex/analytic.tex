@@ -1,0 +1,155 @@
+\documentclass[a4]{article}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+%\everymath{\displaystyle}
+\begin{document}
+\section{Atmosphere Aerosol PSF}
+
+The cyl and somb functions are defined as follows:
+\begin{eqnarray}
+{\rm cyl}\left(\frac{r}{d}\right)
+&=& 1 \;\;{\rm for}\; 0\le r < d/2\nonumber\\
+&=& 0.5 \;\;{\rm for}\; r= d/2\nonumber\\
+&=& 0 \;\;{\rm for}\; r> d/2\nonumber
+\end{eqnarray}
+
+\begin{equation}
+{\rm somb}\left(\frac{r}{d}\right)=
+\frac{2J_1\left(\frac{\pi r}{d}\right)}{\left(\frac{\pi r}{d}\right)}
+\end{equation}
+where $J_1$ is the first-order Bessel function of the first kind.
+
+The Dirac-delta function $\delta(r)$ has infinite height, zero width and the area under the impulse response is one,
+\begin{equation}
+\int_0^\infty\frac{\delta(r)}{r\pi}dr = 1.
+\end{equation}
+This is important when the psf is implemented in discrete, pixelated form.
+
+
+\begin{center}
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{c@{\protect\rule{8mm}{0mm}}c}
+%\toprule[\lightrulewidth]
+\multicolumn{2}{c}{\textbf{Zero-order Hankel properties}}\\
+\midrule
+$\displaystyle 
+g(r)=2\pi\int_0^\infty G(\rho^\prime)J_0(2\pi r\rho^\prime)\rho^\prime d\rho^\prime$ & 
+$\displaystyle 
+G(\rho)=2\pi\int_0^\infty g(r^\prime)J_0(2\pi \rho r^\prime)r^\prime dr^\prime$\\
+\midrule
+$\displaystyle h(r)$ & $\displaystyle H(\rho)$\\
+$\displaystyle A\,f(r)+B\,h(r)$ & $\displaystyle A\,F(\rho)+B\,H(\rho)$\\
+$\displaystyle f(r)h(r)$ & $\displaystyle F(\rho)\star\star\,H(\rho)$\\
+$\displaystyle f(r)\star\star\,h(r)$ & $\displaystyle F(\rho)H(\rho)$\\
+$\displaystyle f\left(\frac{r}{b}\right)$ & $\displaystyle|b|^2F(b\rho)$\\
+%$\displaystyle$ & $\displaystyle $ \\
+\bottomrule[\lightrulewidth]
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{c@{\protect\rule{8mm}{0mm}}c}
+%\toprule[\lightrulewidth]
+\multicolumn{2}{c}{\textbf{Elementary zero-order Hankel transform pairs}}\\
+\midrule
+$\displaystyle 
+g(r)=2\pi\int_0^\infty G(\rho^\prime)J_0(2\pi r\rho^\prime)\rho^\prime d\rho^\prime$ & 
+$\displaystyle 
+G(\rho)=2\pi\int_0^\infty g(r^\prime)J_0(2\pi \rho r^\prime)r^\prime dr^\prime$\\
+\midrule
+$\displaystyle\frac{\delta(r)}{r\pi}$ & $\displaystyle 1$ \\
+$\displaystyle {\rm somb}(r) $ & $\displaystyle \frac{4}{\pi}{\rm cyl}(\rho) $ \\
+
+$\displaystyle \exp\left\{-\pi r^2/a\right\}$ & $\displaystyle a \exp\left\{-\pi a\rho^2 \right\}$ \\
+%$\displaystyle$ & $\displaystyle $ \\
+\bottomrule[\lightrulewidth]
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{c@{\protect\rule{8mm}{0mm}}c}
+%\toprule[\lightrulewidth]
+\multicolumn{2}{c}{\textbf{Manipulation of Zero-order Hankel transform pairs}}\\
+\midrule
+$\displaystyle 
+g(r)=2\pi\int_0^\infty G(\rho^\prime)J_0(2\pi r\rho^\prime)\rho^\prime d\rho^\prime$ & 
+$\displaystyle 
+G(\rho)=2\pi\int_0^\infty g(r^\prime)J_0(2\pi \rho r^\prime)r^\prime dr^\prime$\\
+\midrule
+$\displaystyle \frac{\pi}{4}\;{\rm somb}(r) $ & $\displaystyle {\rm cyl}(\rho) $ \\$\displaystyle |f_c|^2\frac{\pi}{4}\;{\rm somb}(f_c r) $ & $\displaystyle {\rm cyl}\left(\frac{\rho}{f_c}\right) $ \\
+
+$\displaystyle |f_c|^2\,\exp\left\{-\pi (f_c r)^2/a\right\}$ & $\displaystyle a \exp\left\{-\pi a\left(\frac{\rho}{f_c}\right)^2 \right\}$ \\
+$\displaystyle |f_c|^2\,\exp\left\{-\pi^2 (f_c r)^2/\beta\right\}$ & $\displaystyle \frac{\beta}{\pi} \exp\left\{-\beta\left(\frac{\rho}{f_c}\right)^2 \right\}$ \\
+$\displaystyle \frac{\pi}{\beta} |f_c|^2\,\exp\left\{-\pi^2 (f_c r)^2/\beta\right\}$ & $\displaystyle \exp\left\{-\beta\left(\frac{\rho}{f_c}\right)^2 \right\}$ \\
+%$\displaystyle$ & $\displaystyle $ \\
+\bottomrule[\lightrulewidth]
+\end{tabular}
+\end{center}
+
+The original Kopeika aerosol MTF formulation is as follows:
+\begin{eqnarray}
+M(\rho)
+&=&\exp\left(-\beta\left(\frac{\rho}{f_c}\right)^2\right) 
+   \;\;{\rm for}\; \rho < f_c\nonumber\\
+&=&\exp\left(-\beta\right) 
+   \;\;{\rm for}\; \rho \ge f_c\
+\end{eqnarray}
+This can be reformulated as
+\begin{equation}
+M(\rho)=
+\exp\left(-\beta\right) + \left[\exp\left\{-\beta\left(\frac{\rho}{f_c}\right)^2\right\}- \exp\left(-\beta\right) \right]
+{\rm cyl}\left(\frac{\rho}{f_c}\right).
+\end{equation}
+Applying the Hankel transform
+\begin{eqnarray}
+m(r)&=&
+\exp\left(-\beta\right)\frac{\delta(r)}{r\pi}  \nonumber\\
+&&+\left[\frac{\pi}{\beta} |f_c|^2\,\exp\left\{-\pi^2 (f_c r)^2/\beta\right\}- \exp\left(-\beta\right)\frac{\delta(r)}{r\pi} \right]\nonumber\\
+&&\star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r) \nonumber\\
+&=&
+\exp\left(-\beta\right)\frac{\delta(r)}{r\pi}  \nonumber\\
+&&+\frac{\pi}{\beta} |f_c|^2\,\exp\left\{-\pi^2 (f_c r)^2/\beta\right\}\star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r) \nonumber\\
+&&- \exp\left(-\beta\right)\frac{\delta(r)}{r\pi} \star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r) \nonumber\\
+&=&
+\exp\left(-\beta\right)\frac{\delta(r)}{r\pi}  \nonumber\\
+&&- \exp\left(-\beta\right)\frac{\delta(r)}{r\pi} \star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r) \nonumber\\
+&&+\frac{\pi}{\beta} |f_c|^2\,\exp\left\{-\pi^2 (f_c r)^2/\beta\right\}\star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r). \nonumber
+\end{eqnarray}
+Which leads to the final formulation
+\begin{eqnarray}
+m(r)&=&
+\exp\left(-\beta\right)
+\left[
+\frac{\delta(r)}{r\pi} - 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r) \right]\nonumber\\
+&&+\frac{\pi}{\beta} |f_c|^2\,\exp\left\{-\pi^2 (f_c r)^2/\beta\right\}\star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r) 
+\end{eqnarray}
+because
+\begin{displaymath}
+\frac{\delta(r)}{r\pi} \star\star\, 
+|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r)
+=|f_c|^2\left(\frac{\pi}{4}\right){\rm somb}(f_c r)
+\end{displaymath}
+where
+\begin{equation}
+{\rm somb}\left(f_c r\right)=
+\frac{2J_1\left(\pi f_c r\right)}{\left(\pi f_c r\right)}
+\end{equation}
+
+
+
+
+\end{document}
