@@ -1,0 +1,17 @@
+github.com/NelisW/pyradi/blob/master/pyradi/doc
+
+
+
+
+http://blog.nikhilism.com/2012/08/automatic-github-pages-generation-from.html
+http://datadesk.latimes.com/posts/2012/01/sphinx-on-github/
+https://www.transifex.com/blog/2012/hosting-sphinx-on-github/
+http://blog.teamtreehouse.com/using-github-pages-to-host-your-website
+https://pages.github.com/
+http://daler.github.io/sphinxdoc-test/includeme.html
+
+
+
+https://docs.readthedocs.org/en/latest/index.html
+https://read-the-docs.readthedocs.org/en/latest/getting_started.html
+https://readthedocs.org/
