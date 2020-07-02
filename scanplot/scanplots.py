@@ -200,7 +200,7 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
     return outX, outY
 
 
-xval,yval = extractGraph('kline-csir-asd-grass.png', 0.3452, 1.7, -0.1, 0.7,'kline-csir-asd-grass.txt',
+xval,yval = extractGraph('vodacek-2005-kline.png', 0, 2.5,0,400*1e-6*1e4*1e3,'vodacek-2005-kline.txt',
          True,numXVal=200,IntPHead='wavelength radiance',skipYRuns=True,threshold=0.3)
 
 
