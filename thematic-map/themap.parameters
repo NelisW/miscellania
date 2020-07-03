@@ -1,0 +1,42 @@
+-25.470515 -28.290097                                            latitude [-90;90],longitude [-180;180]
+lrtb                                                             scan order 
+15.000000                                                        ground grid length [m]
+data/***.grn    ground dem
+none                                                             key file - Not used
+data/***Albedo-Annual.dat                     albedo file name
+data/*.bmp  grayscale bmp
+data/***.bmp   classified bmp
+1536        rows in bitmap
+4573        cols in bitmap
+-20         height
+0.5         x scale
+-2.44       x offset
+0.5         y scale
+3.23        y offset
+22          number of defined classes
+0    0    0.97 0.99 0.1 0.7        No-data
+8    8    1.0  1.0  0.1 0.7        Water  
+16   16   0.97 0.99 0.1 0.7        GrassLoNDVIVeld 
+19   19   0.97 0.99 0.1 0.7        GrassLoNDVIVeld 
+20   20   0.97 0.99 0.1 0.7        GrassLoNDVIVeld 
+32   32   0.97 0.99 0.1 0.7        ShrubsBushes 
+40   40   0.97 0.99 0.1 0.7        Trees 
+48   48   0.97 0.99 0.1 0.7        BareSoilIrDirt
+49   49   0.97 0.99 0.1 0.7        BareSoilIrDirt
+50   50   0.97 0.99 0.1 0.7        BareSoilIrDirt
+52   52   0.97 0.99 0.1 0.7        BareSoilIrDirt
+56   56   0.97 0.99 0.1 0.7        DarkTar 
+57   57   0.97 0.99 0.1 0.7        DarkTar 
+80   80   0.97 0.99 0.1 0.7        PaintedTile 
+81   81   0.97 0.99 0.1 0.7        PaintedTile 
+88   88   0.97 0.99 0.1 0.7        PaintedMetal
+91   91   0.97 0.99 0.1 0.7        PaintedMetal
+96   96   0.97 0.99 0.1 0.7        UnpaintedMetal 
+104  104  0.97 0.99 0.1 0.7        Concrete 
+128  128  0.97 0.99 0.1 0.7        CultivatedCrops 
+160  160  0.97 0.99 0.1 0.7        RoadMarkings 
+200  200  0.97 0.99 0.1 0.7        Greenery  
+91                                 URBAN_CLASS 
+241 240     Material nrs: ground-next-to-wall and wall-next-to-ground               
+1                                  Variance scaling conversion algorithm on/off (0/1)
+
