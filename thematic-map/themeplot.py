@@ -128,38 +128,6 @@ def readParameters(pfilename):
 
 
 #################################################################
-# to see a plan view of the target area
-def plotTheColmap(thmapcol,thmapcolN,pfilename):
-    """
-    """
-    mapfilename = pfilename.replace('.parameters','-cmap.png')
-    if mapfilename == pfilename :
-        print('check thematic parameters file type: expected *.bmp')
-        exit()
-
-    pthemes = readParameters(pfilename)
-    numgrid = int(np.sqrt(len(thmapcolN.keys()))+1)
-
-    blocksize = 1.
-    fig = plt.figure(figsize=(10,10), dpi=150,)
-    ax = fig.add_subplot(1, 1, 1)
-    for ik,key in enumerate(pthemes.keys()):
-        x = ik % numgrid
-        y = (ik - ik % numgrid) / numgrid
-
-        p = Rectangle((blocksize*x ,blocksize*y), blocksize,blocksize,color=thmapcolN[key],alpha=1)
-        ax.add_patch(p)        
-
-        ax.text(x+blocksize/2, y+(0.5 + 0.2) * blocksize, f'{key}',horizontalalignment='center',fontsize=7)
-        ax.text(x+blocksize/2, y+(0.5) * blocksize, f'{pthemes[key]}',horizontalalignment='center',fontsize=7)
-        ax.text(x+blocksize/2, y+(0.5-0.2) * blocksize, f'{thmapcol[key]}',horizontalalignment='center',fontsize=7)
-
-    ax.set_xlim(0,numgrid*blocksize)
-    ax.set_ylim(0,numgrid*blocksize)
-    plt.savefig(mapfilename,dpi=300)
-
-
-#################################################################
 def makeColourImg(thmapcol,filename,pfilename, scaledown=1):
 
     theimgT = imageio.imread(filename)
@@ -207,6 +175,41 @@ def makeColourImg(thmapcol,filename,pfilename, scaledown=1):
             colimg[row,col,:] =  thmapcol[theimg[row,col]]
 
     imageio.imwrite(tfilename,colimg)
+
+
+#################################################################
+# to see a plan view of the target area
+def plotTheColmap(thmapcol,thmapcolN,pfilename):
+    """
+    """
+    mapfilename = pfilename.replace('.parameters','-cmap.png')
+    if mapfilename == pfilename :
+        print('check thematic parameters file type: expected *.bmp')
+        exit()
+
+    pthemes = readParameters(pfilename)
+    xsize = 6
+    maxy = 0
+    fig = plt.figure(figsize=(xsize,0.2*len(pthemes)), dpi=150,)
+    ax = fig.add_subplot(1, 1, 1)
+
+    for ik,key in enumerate(pthemes.keys()):
+        x = 0
+        y = 2 * ik
+        p = Rectangle((x ,y), 0.5,2,color=thmapcolN[key],alpha=1)
+        maxy = y + 2
+        ax.add_patch(p)        
+
+        strCol = ','.join([f'{ist:3d}' for ist in thmapcol[key]])
+        txtline = f'{key:3d} ({strCol}) {pthemes[key]}'
+        ax.text(x+0.55,y+0.2, f'{txtline}',horizontalalignment='left',fontsize='large',
+        family='monospace',weight='light')
+
+    # ax.axis('equal')
+    ax.set_xlim(0,xsize)
+    ax.set_ylim(0,maxy)
+    plt.axis('off')
+    plt.savefig(mapfilename,dpi=300,bbox_inches='tight')
 
 #################################################################
 scaledown = 1
