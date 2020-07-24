@@ -200,8 +200,8 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
     return outX, outY
 
 
-xval,yval = extractGraph('vodacek-2005-kline.png', 0, 2.5,0,400*1e-6*1e4*1e3,'vodacek-2005-kline.txt',
-         True,numXVal=200,IntPHead='wavelength radiance',skipYRuns=True,threshold=0.3)
+xval,yval = extractGraph('Qioptic6_50000_770nm_clean.png', 0, 600,0,1,'Qioptic6_50000_770nm_MTF.txt',
+         True,numXVal=600,IntPHead='wavelength radiance',skipYRuns=True,threshold=0.3)
 
 
 
