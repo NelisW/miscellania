@@ -199,9 +199,12 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
 
     return outX, outY
 
+# def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
+#         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
+#         threshold=0.5):
 
-xval,yval = extractGraph('Qioptic6_50000_770nm_clean.png', 0, 600,0,1,'Qioptic6_50000_770nm_MTF.txt',
-         True,numXVal=600,IntPHead='wavelength radiance',skipYRuns=True,threshold=0.3)
+xval,yval = extractGraph('Qioptic6_50000_770nm_clean.png', 0., 600.,0.,1.,'Qioptic6_50000_770nm_MTF.txt',
+         True,numXVal=600,IntPHead='frequency MTF',skipYRuns=False,threshold=0.7)
 
 
 
