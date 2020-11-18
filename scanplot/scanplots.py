@@ -203,8 +203,8 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
 #         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
 #         threshold=0.5):
 
-xval,yval = extractGraph('sindyag.png', 0.4, 1.1,0.,0.8,'sindyag.txt',
-         True,numXVal=600,IntPHead='frequency MTF',skipYRuns=False,threshold=0.7)
+xval,yval = extractGraph('excelitas-tc.png', -40, 60,0.2,0.7,'excelitas-tc.txt',
+         True,numXVal=600,IntPHead='wavelength responsivity',skipYRuns=False,threshold=0.7)
 
 
 
