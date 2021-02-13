@@ -189,9 +189,9 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
         if doPlot:
             if xaxisLog and yaxisLog:
                 pylab.plot(np.log10(outX),np.log10(outY))
-            if not xaxisLog and yaxisLog:
+            elif not xaxisLog and yaxisLog:
                 pylab.plot(outX,np.log10(outY))
-            if xaxisLog and not yaxisLog:
+            elif xaxisLog and not yaxisLog:
                 pylab.plot(np.log10(outX),outY)
             else:
                 pylab.plot(outX,outY)
@@ -203,9 +203,10 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
 #         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
 #         threshold=0.5):
 
-xval,yval = extractGraph('excelitas-tc.png', -40, 60,0.2,0.7,'excelitas-tc.txt',
-         True,numXVal=600,IntPHead='wavelength responsivity',skipYRuns=False,threshold=0.7)
+xval,yval = extractGraph('waterpure.png', 0.4, 0.7,-2,2,'waterpure.txt',
+         True,numXVal=200,IntPHead='Wavelength Reflectance',skipYRuns=False,threshold=0.7,yaxisLog=True)
 
 
 
 
+2.7429
