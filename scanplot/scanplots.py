@@ -24,6 +24,7 @@ neliswillers@gmail.com
 """
 
 import numpy as np
+from numpy.linalg import cond
 import scipy
 from scipy import ndimage
 import imageio
@@ -33,6 +34,7 @@ from skimage.morphology import medial_axis
 from scipy.interpolate import interp1d
 from scipy import arange, array, exp
 from scipy.interpolate import InterpolatedUnivariateSpline
+from pathlib import Path
 
 # def extrap1d(interpolator):
 #     xs = interpolator.x
@@ -115,7 +117,7 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
     # img = ndimage.imread(filename, True)
     img = imageio.imread(filename)
     img = img[:,:,0]
-    print(img.shape)
+    print(f'{filename}: {img.shape}')
 
     # find threshold up the way
     threslevel = img.min() + threshold *(img.max()-img.min()) 
@@ -159,15 +161,23 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
         if skipYRuns:
             # find runs of duplicate y-values, don't repeat inside the run
             run_values, run_starts, run_lengths = find_runs(yval.reshape(-1,))
-            outX = xval[run_starts]
-            outY = yval[run_starts]
+            if len(run_lengths)>1:
+                outX = xval[run_starts]
+                outY = yval[run_starts]
+            else:
+                outX = xval
+                outY = yval
         else:
             outX = xval
             outY = yval
 
         # interpolate to get the required number of values
         # do inter/extrapolation
-        sinter = InterpolatedUnivariateSpline(outX, outY, k=1)
+        if len(outX)==0 or len(outY)==0:
+            print('zero-length inputs to interpolate')
+            return None,None
+        else:
+            sinter = InterpolatedUnivariateSpline(outX, outY) #, k=1)
 
         # new values for outX and outY
         outX = np.linspace(xmin,xmax,numXVal)
@@ -206,7 +216,3 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
 xval,yval = extractGraph('waterpure.png', 0.4, 0.7,-2,2,'waterpure.txt',
          True,numXVal=200,IntPHead='Wavelength Reflectance',skipYRuns=False,threshold=0.7,yaxisLog=True)
 
-
-
-
-2.7429
