@@ -83,7 +83,7 @@ def find_runs(x):
         return run_values, run_starts, run_lengths
 
 
-def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
+def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
         threshold=0.5):
     """
@@ -97,7 +97,7 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
         | xmax: the value corresponding to the right side (column=max)
         | ymin: the value corresponding to the bottom side (row=bottom)
         | ymax: the value corresponding to the top side (row=top)
-        | outfile: write the sampled points to this output file
+        | outfile: write the sampled points to this output file, None to not write
         | doPlot: plot the digitised graph for visual validation
         | xaxisLog: x-axis is in log10 scale (min max are log values)
         | yaxisLog: y-axis is in log10 scale (min max are log values)
@@ -157,7 +157,6 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
         yval = yval
 
     #process and write output file
-    if len(outfile) > 0 :
         if skipYRuns:
             # find runs of duplicate y-values, don't repeat inside the run
             run_values, run_starts, run_lengths = find_runs(yval.reshape(-1,))
@@ -186,6 +185,7 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile="",doPlot=False,
         # form the output array
         oarray = np.hstack((outX.reshape(-1,1),outY.reshape(-1,1)))
 
+    if outfile is not None :
         if IntPHead is None:
             np.savetxt(outfile,oarray)
         else:
