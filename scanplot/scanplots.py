@@ -116,8 +116,11 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
     #read image file, as grey scale
     # img = ndimage.imread(filename, True)
     img = imageio.imread(filename)
-    img = img[:,:,0]
     print(f'{filename}: {img.shape}')
+    if len(img.shape)>2:
+        img = img[:,:,0]
+    else:
+        img = img[:,:]
 
     # find threshold up the way
     threslevel = img.min() + threshold *(img.max()-img.min()) 
