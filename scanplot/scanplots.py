@@ -216,6 +216,6 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
 #         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
 #         threshold=0.5):
 
-xval,yval = extractGraph('waterpure.png', 0.4, 0.7,-2,2,'waterpure.txt',
-         True,numXVal=200,IntPHead='Wavelength Reflectance',skipYRuns=False,threshold=0.7,yaxisLog=True)
+xval,yval = extractGraph('Hamamatsu-detector.png', 0.3, 1.2,0.,0.8,'Hamamatsu-detector.txt',
+         True,numXVal=200,IntPHead='Responsivity',skipYRuns=False,threshold=0.7,yaxisLog=False)
 
