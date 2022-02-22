@@ -14,3 +14,5 @@
 /.vscode/launch.json
 /.vscode/settings.json
 /jakevdpFreqBayes/.ipynb_checkpoints
+/solar/.ipynb_checkpoints
+/solar/__pycache__
