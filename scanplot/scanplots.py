@@ -36,6 +36,8 @@ from scipy import arange, array, exp
 from scipy.interpolate import InterpolatedUnivariateSpline
 from pathlib import Path
 
+debug = False
+
 # def extrap1d(interpolator):
 #     xs = interpolator.x
 #     ys = interpolator.y
@@ -85,7 +87,7 @@ def find_runs(x):
 
 def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
-        threshold=0.5):
+        threshold=0.5,extrapolate=3):
     """
     This function processes an image, calculate the location, and scale the
     (r,c) or (x,y) values of pixels with non-zero values. This can be used
@@ -105,6 +107,7 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
         | IntPHead: OSSIM 1D interpolation table header (str)
         | skipYRuns: = do not repeat duplicate runs of y values (bool)
         | threshold: = percentage of spread (double)
+        | extrapolate: = scipy.interpolate.InterpolatedUnivariateSpline  ext value(int)
 
     Returns:
         | xval: the sampled and scaled x-values
@@ -116,11 +119,13 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
     #read image file, as grey scale
     # img = ndimage.imread(filename, True)
     img = imageio.imread(filename)
-    print(f'{filename}: {img.shape}')
+    print(f'{filename} shape: {img.shape}')
     if len(img.shape)>2:
         img = img[:,:,0]
     else:
         img = img[:,:]
+
+    inimg = img 
 
     # find threshold up the way
     threslevel = img.min() + threshold *(img.max()-img.min()) 
@@ -128,9 +133,10 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
     img = img < threslevel
     #find the skeleton one pixel wide
     imgskel = medial_axis(img)
-    # pylab.imshow(imgskel)
-    # pylab.gray()
-    # pylab.show()
+    if debug:
+        pylab.imshow(imgskel)
+        pylab.gray()
+        pylab.show()
 
     # set up indices arrays to get x and y indices
     ind = np.indices(img.shape)
@@ -138,13 +144,17 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
     #skeletonise the graph to one pixel only
     #then get the y pixel value, using indices
     yval = ind[0,...] * imgskel.astype(float)
-    # pylab.imshow(yval>0)
-    # pylab.gray()
-    # pylab.show()
+    if debug:
+        pylab.imshow(yval>0)
+        pylab.gray()
+        pylab.show()
     # invert y-axis origin from left top to left bottom
     yval = yval.shape[0] - np.max(yval, axis=0)
     #get indices for only the pixels where we have data
     wantedIdx = np.where(np.sum(imgskel, axis = 0) > 0)
+    if debug:
+        print(f'yval={yval}')
+        print(f'wantedIdx={wantedIdx}')
 
     # convert to original graph coordinates
     cvec = np.arange(0.0,img.shape[1])
@@ -158,57 +168,70 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
         yval = 10 ** yval
     else:
         yval = yval
+        if debug:
+            print(f'xval {xval}')
+            print(f'yval {yval}')
 
     #process and write output file
-        if skipYRuns:
-            # find runs of duplicate y-values, don't repeat inside the run
-            run_values, run_starts, run_lengths = find_runs(yval.reshape(-1,))
-            if len(run_lengths)>1:
-                outX = xval[run_starts]
-                outY = yval[run_starts]
-            else:
-                outX = xval
-                outY = yval
+    if skipYRuns:
+        # find runs of duplicate y-values, don't repeat inside the run
+        run_values, run_starts, run_lengths = find_runs(yval.reshape(-1,))
+        if len(run_lengths)>1:
+            outX = xval[run_starts]
+            outY = yval[run_starts]
         else:
             outX = xval
             outY = yval
+    else:
+        outX = xval
+        outY = yval
 
-        # interpolate to get the required number of values
-        # do inter/extrapolation
-        if len(outX)==0 or len(outY)==0:
-            print('zero-length inputs to interpolate')
-            return None,None
-        else:
-            sinter = InterpolatedUnivariateSpline(outX, outY) #, k=1)
+    # interpolate to get the required number of values
+    # do inter/extrapolation
+    if len(outX)==0 or len(outY)==0:
+        print('zero-length inputs to interpolate')
+        return None,None
+    else:
+        sinter = InterpolatedUnivariateSpline(outX, outY,ext=extrapolate) #, k=1)
 
-        # new values for outX and outY
-        outX = np.linspace(xmin,xmax,numXVal)
-        outY = sinter(outX)
+    # new values for outX and outY
+    outX = np.linspace(xmin,xmax,numXVal)
+    outY = sinter(outX)
 
-        # form the output array
-        oarray = np.hstack((outX.reshape(-1,1),outY.reshape(-1,1)))
+    # form the output array
+    oarray = np.hstack((outX.reshape(-1,1),outY.reshape(-1,1)))
 
-    if outfile is not None :
-        if IntPHead is None:
-            np.savetxt(outfile,oarray)
-        else:
-            with open(outfile, 'wb') as fout:
-                dstr = '0 infty'
-                fout.write('{}\n'.format(IntPHead).encode())
-                fout.write('{}\n'.format(dstr).encode())
-                fout.write('{}\n'.format(dstr).encode())
-                np.savetxt(fout, oarray,fmt='%.12e')
+    if 'oarray' in locals():
 
-        if doPlot:
-            if xaxisLog and yaxisLog:
-                pylab.plot(np.log10(outX),np.log10(outY))
-            elif not xaxisLog and yaxisLog:
-                pylab.plot(outX,np.log10(outY))
-            elif xaxisLog and not yaxisLog:
-                pylab.plot(np.log10(outX),outY)
+        if outfile is not None :
+            if IntPHead is None:
+                np.savetxt(outfile,oarray)
             else:
-                pylab.plot(outX,outY)
-            pylab.show()
+                with open(outfile, 'wb') as fout:
+                    dstr = '0 infty'
+                    fout.write('{}\n'.format(IntPHead).encode())
+                    fout.write('{}\n'.format(dstr).encode())
+                    fout.write('{}\n'.format(dstr).encode())
+                    np.savetxt(fout, oarray,fmt='%.12e')
+
+            if doPlot:
+                if xaxisLog and yaxisLog:
+                    pylab.plot(np.log10(outX),np.log10(outY))
+                elif not xaxisLog and yaxisLog:
+                    pylab.plot(outX,np.log10(outY))
+                elif xaxisLog and not yaxisLog:
+                    pylab.plot(np.log10(outX),outY)
+                else:
+                    pylab.plot(outX,outY)
+                pylab.show()
+    else:
+        print('oarray does not exist')
+        print(f'Image stats: Min {inimg.min():d}, Max {inimg.max():d}, Threshold {threslevel}')
+        print('Check if graphs line covers full x range')
+
+
+
+        return None, None
 
     return outX, outY
 
@@ -216,6 +239,6 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
 #         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
 #         threshold=0.5):
 
-xval,yval = extractGraph('Hamamatsu-detector.png', 0.3, 1.2,0.,0.8,'Hamamatsu-detector.txt',
-         True,numXVal=200,IntPHead='Responsivity',skipYRuns=False,threshold=0.7,yaxisLog=False)
+xval,yval = extractGraph('lioncyc.png', 0, 80,3,6,'lioncyc.txt',
+         True,numXVal=100,IntPHead='Li-Ion cycle life',skipYRuns=False,threshold=0.7,yaxisLog=True)
 
