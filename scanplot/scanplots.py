@@ -118,7 +118,7 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
 
     #read image file, as grey scale
     # img = ndimage.imread(filename, True)
-    img = imageio.imread(filename)
+    img = imageio.v2.imread(filename)
     print(f'{filename} shape: {img.shape}')
     if len(img.shape)>2:
         img = img[:,:,0]
@@ -239,6 +239,6 @@ def extractGraph(filename, xmin, xmax, ymin, ymax, outfile=None,doPlot=False,
 #         xaxisLog=False, yaxisLog=False,numXVal=100,IntPHead = None,skipYRuns=False,
 #         threshold=0.5):
 
-xval,yval = extractGraph('lioncyc.png', 0, 80,3,6,'lioncyc.txt',
-         True,numXVal=100,IntPHead='Li-Ion cycle life',skipYRuns=False,threshold=0.7,yaxisLog=True)
+xval,yval = extractGraph('daphnenotch.png', 3, 5, 0, 1,'daphnenotch.txt',
+         True,numXVal=20,IntPHead='daphnenotch',skipYRuns=False,threshold=0.5,yaxisLog=False)
 
